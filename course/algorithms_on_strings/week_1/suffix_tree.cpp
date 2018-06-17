@@ -2,6 +2,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <cstring>
 
 using std::cin;
 using std::cout;
@@ -9,7 +10,6 @@ using std::endl;
 using std::map;
 using std::string;
 using std::vector;
-
 
 class Suffix {
 public:
@@ -29,7 +29,6 @@ public:
     void Canonize();
 
 };
-
 
 class Edge {
 public:
@@ -228,7 +227,7 @@ vector<string> ComputeSuffixTreeEdges(const string& text) {
     vector<string> result;
     text.copy(BUFFER, sizeof BUFFER);
     BUFFER[text.size()] = '\0';
-    N = strlen(BUFFER) - 1;
+    N = std::strlen(BUFFER) - 1;
     Suffix active(0, 0, -1);
 
     for (size_t i = 0; i <= N; ++i) {
