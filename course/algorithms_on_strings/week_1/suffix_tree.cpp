@@ -56,7 +56,7 @@ public:
 };
 
 const int MAX_LENGTH = 6000;
-const int HASH_TABLE_SIZE = 6607;
+const int HASH_TABLE_SIZE = 13003;
 
 char BUFFER[MAX_LENGTH];
 int N;
@@ -239,6 +239,8 @@ vector<string> ComputeSuffixTreeEdges(const string& text) {
 }
 
 int main() {
+    std::ios_base::sync_with_stdio(0);
+    std::cin.tie(0);
     string text;
     cin >> text;
     vector<string> edges = ComputeSuffixTreeEdges(text);
@@ -247,3 +249,4 @@ int main() {
     }
     return 0;
 }
+
