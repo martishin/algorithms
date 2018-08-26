@@ -3,9 +3,9 @@
 
 using namespace std;
 
-class TUnionSet {
+class UnionSet {
 public:
-    TUnionSet(const size_t size) {
+    UnionSet(const size_t size) {
         Parent.resize(size);
         Rank.resize(size);
     }
@@ -49,7 +49,7 @@ private:
 
 
 int main() {
-    TUnionSet unionSet(3);
+    UnionSet unionSet(3);
 
     for (size_t i = 0; i < 3; ++i)
         unionSet.MakeSet(i);
