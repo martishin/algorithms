@@ -38,6 +38,24 @@ int binarySearchIterative(const vector<int> &v, int k) {
     return -1;
 }
 
+size_t lowerBound(vector<int>& nums, int value) {
+    size_t l = 0;
+    size_t r = nums.size();
+
+    while (l < r) {
+        auto m = l + (r - l) / 2;
+
+        if (nums[m] < value) {
+            l = m + 1;
+        } else if (nums[m] > value) {
+            r = m;
+        } else {
+            return m;
+        }
+    }
+
+    return l;
+}
 
 int main() {
     int n, k;
