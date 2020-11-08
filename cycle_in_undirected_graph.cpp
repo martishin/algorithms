@@ -22,7 +22,6 @@ using namespace std;
 bool hasCycleComponent(vector<vector<int> > &graph, set<int> &remainingVertices, int startVertex) {
     unordered_set<int> processedVertices;
     stack<pair<int, int>> vertices;
-    bool cycle = false;
 
     vertices.push(make_pair(startVertex, startVertex));
     processedVertices.insert(startVertex);
@@ -38,7 +37,7 @@ bool hasCycleComponent(vector<vector<int> > &graph, set<int> &remainingVertices,
             }
 
             if (processedVertices.find(neighbourVertex) != processedVertices.end()) {
-                cycle = true;
+                return true;
             } else {
                 vertices.push(make_pair(neighbourVertex, currentVertex.first));
                 processedVertices.insert(neighbourVertex);
@@ -47,7 +46,7 @@ bool hasCycleComponent(vector<vector<int> > &graph, set<int> &remainingVertices,
 
     }
 
-    return cycle;
+    return false;
 }
 
 
