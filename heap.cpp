@@ -8,7 +8,7 @@ using namespace std;
 
 
 template<typename T>
-class Heap {
+class MaxHeap {
     vector<T> heap;
 
     int getLeftChild(int parent) {
@@ -31,32 +31,32 @@ class Heap {
         int left = getLeftChild(node);
         int right = getRightChild(node);
 
-        int smallest = [](const vector<pair<int, int> > &v) {
-            return min_element(v.begin(), v.end())->second;
+        int biggest = [](const vector<pair<int, int> > &v) {
+            return max_element(v.begin(), v.end())->second;
         }({
             {heap[node], node},
-            {left < size() ? heap[left]: INT_MAX, left},
-            {right < size() ? heap[right]: INT_MAX, right}
+            {left < size() ? heap[left]: INT_MIN, left},
+            {right < size() ? heap[right]: INT_MIN, right}
         });
 
-        if (smallest != node) {
-            swap(heap[node], heap[smallest]);
-            siftDown(smallest);
+        if (biggest != node) {
+            swap(heap[node], heap[biggest]);
+            siftDown(biggest);
         }
     }
 
     void siftUp(int node) {
         int parent = getParent(node);
 
-        if (node && heap[parent] > heap[node]) {
+        if (node && heap[parent] < heap[node]) {
             swap(heap[node], heap[parent]);
             siftUp(parent);
         }
     }
 public:
-    Heap() {}
+    MaxHeap() {}
 
-    Heap(vector<T> input) {
+    MaxHeap(vector<T> input) {
         heap = input;
         for (int i = heap.size() / 2; i >= 0; --i)
             siftDown(i);
@@ -112,9 +112,9 @@ public:
 
 
 int main() {
-    vector<int> input{6, 2, 3, 4, 5, 1};
+    vector<int> input{6, 3, 2, 4, 1, 5};
 
-    Heap<int> h{input};
+    MaxHeap<int> h{input};
 
     h.print();
 
