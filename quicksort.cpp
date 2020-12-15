@@ -4,32 +4,30 @@
 using namespace std;
 
 
-int partition(vector<int> &v, int l, int r, int pivot) {
-    swap(v[pivot], v[l]);
-    int p = l;
+int partition(vector<int>& nums, int l, int r, int pivotIdx) {
+    swap(nums[l], nums[pivotIdx]);
+    int newPivotIdx = l;
 
     for (size_t i = l + 1; i < r; ++i) {
-        if (v[i] <= v[l]) {
-            ++p;
-            swap(v[i], v[p]);
+        if (nums[i] <= nums[l]) {
+            swap(nums[i], nums[++newPivotIdx]);
         }
     }
-    swap(v[l], v[p]);
 
-    return p;
+    swap(nums[l], nums[newPivotIdx]);
+
+    return newPivotIdx;
 }
 
-
-void quickSort(vector<int> &v, int l, int r) {
+void quickSort(vector<int>& nums, int l, int r) {
     if (l < r) {
-        int pivot = l + rand() % (r - l);
-        int p = partition(v, l, r, pivot);
+        int pivotIdx = (l + r) / 2;
+        pivotIdx = partition(nums, l, r, pivotIdx);
 
-        quickSort(v, l, p);
-        quickSort(v, p + 1, r);
+        quickSort(nums, l, pivotIdx);
+        quickSort(nums, pivotIdx + 1, r);
     }
 }
-
 
 int main() {
     int n;
