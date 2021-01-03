@@ -3,62 +3,61 @@
 
 using namespace std;
 
-class UnionSet {
+class DSU {
 public:
-    UnionSet(const size_t size) {
-        Parent.resize(size);
-        Rank.resize(size);
-    }
-
-    void MakeSet(const int element) {
-        Parent[element] = element;
-        Rank[element] = 0;
-    }
-
-    int Find(int element) {
-        while (element != Parent[element])
-            element = Parent[element];
-        return element;
-    }
-
-    void Union(const int firstElement, const int secondElement) {
-        auto firstElementParent = Find(firstElement);
-        auto secondElementParent = Find(secondElement);
-
-        if (firstElementParent == secondElementParent)
-            return;
-
-        if (Rank[firstElementParent] > Rank[secondElementParent])
-            Parent[secondElementParent] = firstElementParent;
-        else {
-            Parent[firstElementParent] = secondElementParent;
-            if (Rank[firstElementParent] == Rank[secondElementParent])
-                ++Rank[secondElementParent];
+    DSU(const size_t size)
+        : parent(size)
+        , rank(size)
+    {
+        for (size_t i = 0; i < size; ++i) {
+            parent[i] = i;
         }
     }
 
-    void Print() {
-        for (size_t i = 0; i < Parent.size(); ++i) {
-            cout << i << ' ' << Parent[i] << endl;
+    int find_set(int x) {
+        if (x != parent[x]) {
+            parent[x] = find_set(parent[x]);
+        }
+        return parent[x];
+    }
+
+    bool union_sets(int x, int y) {
+        int xp = find_set(x);
+        int yp = find_set(y);
+
+        if (xp == yp) {
+            return false;
+        } else if (rank[xp] < rank[yp]) {
+            parent[xp] = yp;
+        } else if (rank[xp] > rank[yp]) {
+            parent[yp] = xp;
+        } else {
+            parent[xp] = yp;
+            ++rank[yp];
+        }
+
+        return true;
+    }
+
+    void print() {
+        for (size_t i = 0; i < parent.size(); ++i) {
+            cout << i << ' ' << parent[i] << endl;
         }
     }
 private:
-    vector<int> Parent;
-    vector<int> Rank;
+    vector<int> parent;
+    vector<int> rank;
 };
 
 
 int main() {
-    UnionSet unionSet(3);
+    DSU dsu(3);
 
-    for (size_t i = 0; i < 3; ++i)
-        unionSet.MakeSet(i);
+    dsu.union_sets(0, 2);
+    dsu.union_sets(1, 2);
+    dsu.union_sets(0, 1);
 
-    unionSet.Union(0, 2);
-    unionSet.Union(1, 2);
-    unionSet.Union(0, 1);
-
-    unionSet.Print();
+    dsu.print();
 
     return 0;
 }
