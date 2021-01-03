@@ -4,14 +4,14 @@
 
 using namespace std;
 
-enum States {
+enum State {
     NOT_VISITED,
     VISITING,
     VISITED
 };
 
 
-bool hasCycleWithStart(int v, vector<vector<int> > &graph, vector<States> &visited) {
+bool hasCycleWithStart(int v, vector<vector<int> > &graph, vector<State> &visited) {
     bool cycle = false;
 
     visited[v] = VISITING;
@@ -27,7 +27,7 @@ bool hasCycleWithStart(int v, vector<vector<int> > &graph, vector<States> &visit
 
 
 bool hasCycle(vector<vector<int> > &graph) {
-    vector<States> visited(graph.size(),  NOT_VISITED);
+    vector<State> visited(graph.size(),  NOT_VISITED);
 
     for (size_t i = 0; i < graph.size(); ++i) {
         if (visited[i] == NOT_VISITED) {
