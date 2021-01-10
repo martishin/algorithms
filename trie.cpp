@@ -7,126 +7,87 @@
 #include <memory>
 #include <array>
 
-using std::vector;
+using namespace std;
 using std::cout;
 using std::endl;
 
-const int LettersCount = 4;
-
 class Trie {
-public:
-    Trie() : root(nullptr) {}
+private:
+    struct TrieNode {
+        array<unique_ptr<TrieNode>, 26> children;
+        bool end = false;
+    };
 
-    void Insert(const std::string& pattern) {
-        if (root == nullptr) {
-            root = std::make_unique<TrieNode>();
-        }
+    unique_ptr<TrieNode> head;
 
-        TrieNode *currentNode = root.get();
-
-        for (const auto &letter: pattern) {
-            auto letterIndex = letterToIndex(letter);
-
-            if (currentNode->Next[letterIndex] == nullptr) {
-                currentNode->Next[letterIndex] = std::make_unique<TrieNode>();
-            }
-
-            currentNode = currentNode->Next[letterIndex].get();
-        }
-
-        currentNode->IsLeaf = true;
+    inline size_t getIdx(char c) {
+        return c - 'a';
     }
 
-    bool Match(const std::string& text, size_t startIndex) const {
-        if (root == nullptr) {
-            return false;
+public:
+    Trie() {
+        head = make_unique<TrieNode>();
+    }
+
+    void insert(string word) {
+        auto current = head.get();
+
+        for (const auto c : word) {
+            size_t idx = getIdx(c);
+
+            if (!current->children[idx]) {
+                current->children[idx] = make_unique<TrieNode>();
+            }
+
+            current = current->children[idx].get();
         }
 
-        TrieNode *currentNode = root.get();
+        current->end = true;
+    }
 
-        for (size_t i = startIndex; i < text.size(); ++i) {
-            auto letterIndex = letterToIndex(text[i]);
+    bool search(string word) {
+        auto current = head.get();
 
-            if (currentNode->IsLeaf) {
-                return true;
-            } else if (currentNode->Next[letterIndex] == nullptr) {
+        for (const auto c : word) {
+            size_t idx = getIdx(c);
+
+            if (!current->children[idx]) {
                 return false;
             }
 
-            currentNode = currentNode->Next[letterIndex].get();
+            current = current->children[idx].get();
         }
 
-
-        return currentNode->IsLeaf;
+        return current->end;
     }
 
-    static inline size_t letterToIndex (char letter) {
-        switch (letter) {
-            case 'A': return 0; break;
-            case 'C': return 1; break;
-            case 'G': return 2; break;
-            case 'T': return 3; break;
-            default: assert (false); return -1;
+    bool startsWith(string prefix) {
+        auto current = head.get();
+
+        for (const auto c : prefix) {
+            size_t idx = getIdx(c);
+
+            if (!current->children[idx]) {
+                return false;
+            }
+
+            current = current->children[idx].get();
         }
+
+        return true;
     }
-private:
-    struct TrieNode;
-    using TrieNodePtr = std::unique_ptr<TrieNode>;
-
-    struct TrieNode {
-        std::array<TrieNodePtr, LettersCount> Next;
-        bool IsLeaf;
-        TrieNode() : IsLeaf(false) {}
-    };
-
-    TrieNodePtr root;
 };
 
 
-vector <size_t> solve(const std::string& text, int n, const vector <std::string>& patterns) {
-    vector<size_t> result;
-    Trie trie;
-
-    for (const auto &pattern: patterns) {
-        trie.Insert(pattern);
-    }
-
-    for (size_t i = 0; i < text.size(); ++i) {
-        if (trie.Match(text, i)) {
-            result.push_back(i);
-        }
-    }
-
-    return result;
-}
-
 int main (void) {
-    std::ios_base::sync_with_stdio(0);
-    std::cin.tie(0);
+    auto trie = new Trie();
 
-    std::string text;
-    std::cin >> text;
-
-    int n;
-    std::cin >> n;
-
-    vector <std::string> patterns (n);
-    for (int i = 0; i < n; i++) {
-        std::cin >> patterns[i];
-    }
-
-    vector <size_t> ans;
-    ans = solve(text, n, patterns);
-
-    for (size_t i = 0; i < ans.size(); i++) {
-        std::cout << ans[i];
-        if (i + 1 < ans.size()) {
-            std::cout << " ";
-        }
-        else {
-            std::cout << std::endl;
-        }
-    }
+    trie->insert("apple");
+    cout << trie->search("apple") << endl;
+    cout << trie->search("app") << endl;
+    cout << trie->startsWith("app") << endl;
+    trie->insert("app");
+    cout << trie->search("app") << endl;
 
     return 0;
 }
